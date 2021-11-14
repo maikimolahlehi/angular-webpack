@@ -1,0 +1,38 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "testApp": {
+      "root": "",
+      "sourceRoot": "src",
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "skipTests": true,
+          "style": "scss"
+        },
+        "@schematics/angular:directive": {
+          "skipTests": true
+        },
+        "@schematics/angular:guard": {
+          "skipTests": true
+        },
+        "@schematics/angular:pipe": {
+          "skipTests": true
+        },
+        "@schematics/angular:service": {
+          "skipTests": true
+        }
+      },
+      "prefix": "test",
+      "architect": {}
+    }
+  },
+  "defaultProject": "testApp",
+  "cli": {
+    "analytics": false,
+    "packageManager": "npm",
+    "defaultCollection": "@ngrx/schematics"
+  }
+}
