@@ -1,0 +1,23 @@
+[
+  {
+    "path": "module-e",
+    "location": "assets/moduloe.umd.js",
+    "moduleName": "ModuloeModule",
+    "description": "Modulo de pruebas",
+    "registered": true
+  },
+  {
+    "path": "library-ext",
+    "location": "assets/library-ext.umd.js",
+    "moduleName": "LibraryExtModule",
+    "description": "Librería externa creada en otro entorno",
+    "registered": true
+  },
+  {
+    "path": "",
+    "location": "assets/test.umd.js",
+    "moduleName": "TestModuleModule",
+    "description": "Librería externa creada en otro entorno",
+    "registered": true
+  }
+]

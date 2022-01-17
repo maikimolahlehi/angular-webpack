@@ -1,12 +1,15 @@
 const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const AngularWebpackPlugin = require("@ngtools/webpack").AngularWebpackPlugin;
+const SimpleProgressWebpackPlugin = require("simple-progress-webpack-plugin");
+const FriendlyErrorsWebpackPlugin = require("friendly-errors-webpack-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
 const path = require("path");
 const sass = require("sass");
 const utils = require("./helpers");
 
 module.exports = (options) => ({
-  context: __dirname + "/../src",
+  context: __dirname + "/../",
   entry: {
     polyfills: utils.root("src/polyfills"),
     main: utils.root("src/main"),
@@ -24,25 +27,12 @@ module.exports = (options) => ({
     runtimeChunk: "single",
     splitChunks: {
       cacheGroups: {
-        rxjs: {
-          test: /[\\/]node_modules[\\/]rxjs[\\/]/,
-          name: "rxjs",
-          chunks: "all",
-        },
-        angular: {
-          test: /[\\/]node_modules[\\/]@angular[\\/]/,
-          name: "angular",
-          chunks: "all",
-        },
-        ngrx: {
-          test: /[\\/]node_modules[\\/]@ngrx[\\/]/,
-          name: "ngrx",
-          chunks: "all",
-        },
-        bootstrap: {
-          test: /[\\/]node_modules[\\/]@ng-bootstrap[\\/]/,
-          name: "bootstrap",
-          chunks: "all",
+        vendors: {
+          chunks: "initial",
+          test: /[\\/]node_modules[\\/]/,
+          name: "vendors",
+          reuseExistingChunk: true,
+          enforce: true,
         },
       },
     },
@@ -74,8 +64,6 @@ module.exports = (options) => ({
         options: {
           digest: "hex",
           hash: "sha512",
-          // For fixing src attr of image
-          // See https://github.com/jhipster/generator-jhipster/issues/11209
           name: "content/[hash].[ext]",
           esModule: false,
         },
@@ -87,7 +75,6 @@ module.exports = (options) => ({
           name: "manifest.webapp",
         },
       },
-      // Ignore warnings about System.import in Angular
       { test: /[\/\\]@angular[\/\\].+\.js$/, parser: { system: false } },
       {
         test: /\.scss$/,
@@ -100,27 +87,25 @@ module.exports = (options) => ({
             options: { implementation: sass },
           },
         ],
-        exclude: /(vendor\.scss|global\.scss)/,
       },
       {
-        test: /(vendor\.scss|global\.scss)/,
-        use: [
-          "style-loader",
-          "css-loader",
-          "postcss-loader",
-          {
-            loader: "sass-loader",
-            options: { implementation: sass },
-          },
-        ],
+        test: /\.css$/,
+        use: ["to-string-loader", "css-loader"],
       },
     ],
   },
   plugins: [
+    new FriendlyErrorsWebpackPlugin(),
+    new SimpleProgressWebpackPlugin({
+      format: "minimal",
+    }),
+    new CopyPlugin({
+      patterns: [{ from: "src/assets", to: "assets" }],
+    }),
     new webpack.DefinePlugin({}),
     new HtmlWebpackPlugin({
-      template: "./index.html",
-      chunks: ["polyfills", "main", "externals"],
+      template: "src/index.html",
+      chunks: ["polyfills", "main", "vendors"],
       chunksSortMode: "manual",
       inject: "body",
       base: "/",
@@ -129,7 +114,7 @@ module.exports = (options) => ({
       tsconfig: utils.root("tsconfig.app.json"),
     }),
     new webpack.optimize.SplitChunksPlugin({
-      name: ["main", "externals", "polyfills"],
+      name: ["main", "vendors", "polyfills"],
     }),
   ],
 });

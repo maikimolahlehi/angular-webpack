@@ -1,1 +1,48 @@
 <p>Hello world</p>
+<div class="card" style="width: 18rem">
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item">
+      <a [routerLink]="['/module-e/list']">ModuloE lista</a>
+    </li>
+    <li class="list-group-item">
+      <a [routerLink]="['/library-ext/content']">Libreria externa contenido</a>
+    </li>
+  </ul>
+</div>
+
+<div class="alert alert-danger" *ngIf="errorVisible">
+  <div class="alert-items">
+    <div class="alert-item static">
+      <div class="alert-icon-wrapper">Info-icono</div>
+      <span class="alert-text">
+        {{ errorMessage }}
+      </span>
+    </div>
+  </div>
+  <button type="button" class="close" aria-label="Close" (click)="closeError()">
+    Close Error
+  </button>
+</div>
+
+<div class="row">
+  <div
+    class="col-lg-4 col-md-6 col-sm-6 col-xs-12"
+    *ngFor="let module of installedModules$ | async"
+    style="margin-top: 20px"
+  >
+    <div class="card">
+      <div class="card-header">
+        {{ module.moduleName }}
+      </div>
+      <div class="card-block">
+        {{ module.description }}
+      </div>
+      <div class="card-footer">
+        <button class="btn btn-primary" (click)="enableModule(module)">
+          Enable
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<router-outlet></router-outlet>
